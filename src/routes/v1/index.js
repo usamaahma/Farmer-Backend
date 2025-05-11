@@ -1,6 +1,9 @@
 const express = require('express');
 const authRoute = require('./auth.route');
 const userRoute = require('./user.route');
+const cropRoute = require('./crop.route');
+const eventRoute = require('./event.route');
+const contactRoute = require('./contact.route');
 const docsRoute = require('./docs.route');
 const config = require('../../config/config');
 
@@ -14,6 +17,18 @@ const defaultRoutes = [
   {
     path: '/users',
     route: userRoute,
+  },
+  {
+    path: '/crop',
+    route: cropRoute,
+  },
+  {
+    path: '/event',
+    route: eventRoute,
+  },
+  {
+    path: '/contact',
+    route: contactRoute,
   },
 ];
 

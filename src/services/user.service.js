@@ -11,7 +11,14 @@ const createUser = async (userBody) => {
   if (await User.isEmailTaken(userBody.email)) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
   }
-  return User.create(userBody);
+
+  // If role is 'farmer', ensure farmer data is nested
+  const userData = { ...userBody };
+  if (userBody.role === 'farmer' && userBody.farmer) {
+    userData.farmer = userBody.farmer;
+  }
+
+  return User.create(userData);
 };
 
 /**
@@ -60,7 +67,20 @@ const updateUserById = async (userId, updateBody) => {
   if (updateBody.email && (await User.isEmailTaken(updateBody.email, userId))) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
   }
-  Object.assign(user, updateBody);
+
+  // Create a safe copy of updateBody
+  const updateData = { ...updateBody };
+
+  // Merge farmer object correctly if present
+  if (updateData.farmer && user.role === 'farmer') {
+    user.farmer = {
+      ...user.farmer.toObject(),
+      ...updateData.farmer,
+    };
+    delete updateData.farmer;
+  }
+
+  Object.assign(user, updateData);
   await user.save();
   return user;
 };
