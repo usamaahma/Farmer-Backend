@@ -13,7 +13,7 @@ const eventSchema = new mongoose.Schema(
     },
     farmerId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Farmer',
+      ref: 'User',
       default: null,
     },
     email: {

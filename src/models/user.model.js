@@ -4,6 +4,46 @@ const bcrypt = require('bcryptjs');
 const { toJSON, paginate } = require('./plugins');
 const { roles } = require('../config/roles');
 
+const farmerSchema = mongoose.Schema(
+  {
+    location: {
+      type: String,
+      required: true,
+    },
+    image: {
+      type: String,
+    },
+    experience: {
+      type: Number,
+      min: 0,
+      required: true,
+    },
+    area: {
+      type: Number,
+      min: 0,
+      required: true,
+    },
+    mainCrops: {
+      type: [String],
+      required: true,
+    },
+    details: {
+      type: String,
+    },
+    contact: {
+      type: String,
+      required: true,
+      validate(value) {
+        const phoneRegex = /^\+?\d{10,15}$/;
+        if (!phoneRegex.test(value)) {
+          throw new Error('Invalid contact number format');
+        }
+      },
+    },
+  },
+  { _id: false } // To embed directly into userSchema
+);
+
 const userSchema = mongoose.Schema(
   {
     name: {
@@ -33,7 +73,7 @@ const userSchema = mongoose.Schema(
           throw new Error('Password must contain at least one letter and one number');
         }
       },
-      private: true, // used by the toJSON plugin
+      private: true,
     },
     role: {
       type: String,
@@ -44,48 +84,41 @@ const userSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    farmer: {
+      type: farmerSchema,
+      required: function () {
+        return this.role === 'farmer';
+      },
+    },
   },
   {
     timestamps: true,
   }
 );
 
-// add plugin that converts mongoose to json
+// Plugins
 userSchema.plugin(toJSON);
 userSchema.plugin(paginate);
 
-/**
- * Check if email is taken
- * @param {string} email - The user's email
- * @param {ObjectId} [excludeUserId] - The id of the user to be excluded
- * @returns {Promise<boolean>}
- */
+// Email check
 userSchema.statics.isEmailTaken = async function (email, excludeUserId) {
   const user = await this.findOne({ email, _id: { $ne: excludeUserId } });
   return !!user;
 };
 
-/**
- * Check if password matches the user's password
- * @param {string} password
- * @returns {Promise<boolean>}
- */
+// Password match
 userSchema.methods.isPasswordMatch = async function (password) {
-  const user = this;
-  return bcrypt.compare(password, user.password);
+  return bcrypt.compare(password, this.password);
 };
 
+// Hash before save
 userSchema.pre('save', async function (next) {
-  const user = this;
-  if (user.isModified('password')) {
-    user.password = await bcrypt.hash(user.password, 8);
+  if (this.isModified('password')) {
+    this.password = await bcrypt.hash(this.password, 8);
   }
   next();
 });
 
-/**
- * @typedef User
- */
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;
