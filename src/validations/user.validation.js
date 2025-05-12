@@ -2,7 +2,6 @@ const Joi = require('joi');
 const { password, objectId } = require('./custom.validation');
 
 const farmerFields = {
-  name: Joi.string().required(),
   location: Joi.string().required(),
   image: Joi.string(),
   experience: Joi.number().min(0).required(),

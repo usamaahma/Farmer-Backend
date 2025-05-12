@@ -34,10 +34,20 @@ const deleteCropById = async (cropId) => {
   return crop;
 };
 
+// New function to get crops by userId
+const getCropsByUser = async (postedBy, options) => {
+  const crops = await Crop.paginate({ postedBy }, options);
+  if (!crops) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'No crops found for this user');
+  }
+  return crops;
+};
+
 module.exports = {
   createCrop,
   queryCrops,
   getCropById,
   updateCropById,
   deleteCropById,
+  getCropsByUser, // Export the new function
 };
