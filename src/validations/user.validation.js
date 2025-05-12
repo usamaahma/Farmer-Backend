@@ -19,7 +19,7 @@ const createUser = {
     email: Joi.string().required().email(),
     password: Joi.string().required().custom(password),
     name: Joi.string().optional(),
-    role: Joi.string().required().valid('user', 'admin', 'farmer'),
+    role: Joi.string().valid('user', 'admin', 'farmer'),
     farmer: Joi.object().keys(farmerFields).optional(),
   }),
 };
