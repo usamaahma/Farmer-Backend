@@ -4,6 +4,7 @@ const userRoute = require('./user.route');
 const cropRoute = require('./crop.route');
 const eventRoute = require('./event.route');
 const contactRoute = require('./contact.route');
+const checkoutRoute = require('./checkout.route');
 const docsRoute = require('./docs.route');
 const config = require('../../config/config');
 
@@ -29,6 +30,10 @@ const defaultRoutes = [
   {
     path: '/contact',
     route: contactRoute,
+  },
+  {
+    path: '/checkout',
+    route: checkoutRoute,
   },
 ];
 

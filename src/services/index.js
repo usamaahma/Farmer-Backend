@@ -5,3 +5,4 @@ module.exports.userService = require('./user.service');
 module.exports.cropService = require('./crop.service');
 module.exports.contactService = require('./contact.service');
 module.exports.eventService = require('./event.service');
+module.exports.checkoutService = require('./checkout.service');
