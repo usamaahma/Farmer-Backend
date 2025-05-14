@@ -41,7 +41,7 @@ const farmerSchema = mongoose.Schema(
       },
     },
   },
-  { _id: false } // To embed directly into userSchema
+  { _id: false }
 );
 
 const userSchema = mongoose.Schema(
