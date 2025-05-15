@@ -3,3 +3,4 @@ module.exports.userController = require('./user.controller');
 module.exports.cropController = require('./crop.controller');
 module.exports.contactController = require('./contact.controller');
 module.exports.eventController = require('./event.controller');
+module.exports.checkoutController = require('./checkout.controller');

@@ -51,10 +51,20 @@ const deleteCrop = {
   }),
 };
 
+// New function to get crops by userId
+const getCropsByUser = {
+  query: Joi.object().keys({
+    postedBy: Joi.string().custom(objectId).required(), // Ensure the user ID is provided
+    limit: Joi.number().integer(),
+    page: Joi.number().integer(),
+  }),
+};
+
 module.exports = {
   createCrop,
   getCrops,
   getCrop,
   updateCrop,
   deleteCrop,
+  getCropsByUser, // Export the new validation function
 };
